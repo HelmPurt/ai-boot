@@ -1,6 +1,7 @@
 # push-ai-boot.ps1
 
 # Check for .gitignore file
+& Get-ChildItem
 if (Test-Path ".gitignore") {
     Write-Host "✅ .gitignore found — verifying tracking status..."
 
