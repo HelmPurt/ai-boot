@@ -1,0 +1,30 @@
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Secrets and system configs
+.env
+*.swp
+.DS_Store
+Thumbs.db
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.bak
+*.tmp
+
+# Model files (mounted via volume)
+models/
+
+# Logs and outputs
+*.log
+
+# Docker artifacts
+Dockerfile~
+
+# Git internals
+.git/
+.gitignore
+
+app/venv/
