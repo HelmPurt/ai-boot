@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🧠 Webchat Interface</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            padding: 2em;
+        }
+        form {
+            margin-bottom: 2em;
+        }
+        input[type="text"] {
+            width: 60%;
+            padding: 0.5em;
+            font-size: 1em;
+        }
+        button[type="submit"] {
+            padding: 0.5em 1em;
+            font-size: 1em;
+        }
+        .response {
+            background-color: #fff;
+            padding: 1em;
+            border-radius: 6px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            margin-bottom: 1em;
+        }
+
+        /* Collapsible styles */
+        .collapsible {
+            background-color: #eee;
+            color: #333;
+            cursor: pointer;
+            padding: 0.5em;
+            width: 100%;
+            border: none;
+            text-align: left;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 0.5em;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+
+        .content {
+            padding: 0.5em 1em;
+            display: none;
+            background-color: #f9f9f9;
+            border-left: 3px solid #bbb;
+            margin-bottom: 1em;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const coll = document.getElementsByClassName("collapsible");
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    const content = this.nextElementSibling;
+                    content.style.display = content.style.display === "block" ? "none" : "block";
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <h2>🧠 Webchat with LLaMA</h2>
+
+    <form method="post">
+        <input type="text" name="prompt" placeholder="Ask me anything..." required>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if prompt %}
+        <h3>Results for: <em>{{ prompt }}</em></h3>
+    {% endif %}
+
+    {% if responses %}
+        {% for r in responses %}
+            <div class="response">
+                <strong>{{ r.title }}</strong>
+                <p>{{ r.content }}</p>
+
+                {% if log %}
+                    <button type="button" class="collapsible">🔍 Show Analytics</button>
+                    <div class="content">
+                        <p><strong>Emotion:</strong> {{ log.soul_map_samples[loop.index0].emotion_trace }}</p>
+                        <p><strong>Tone:</strong> {{ log.soul_map_samples[loop.index0].tone }}</p>
+                        <p><strong>Complexity:</strong> {{ log.soul_map_samples[loop.index0].complexity }}</p>
+                        <p><strong>Sentiment:</strong> {{ log.sentiments[loop.index0] }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% if log.flags %}
+            <p style="color: crimson;"><strong>⚠️ System Flags:</strong> {{ log.flags | join(', ') }}</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

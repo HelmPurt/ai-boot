@@ -1,0 +1,31 @@
+# Bytecode and cache
+__pycache__/
+*.pyc
+
+# Git and version control
+.git/
+.gitignore
+
+# Logs and outputs
+*.log
+
+# Environment and system files
+.env
+*.swp
+.DS_Store
+Thumbs.db
+
+# Model files (handled via volume)
+models/
+
+# Editor configs and temp files
+*.vscode/
+*.idea/
+*.bak
+*.tmp
+
+# Docker artifacts
+Dockerfile~
+
+# Virtual environment form my win11 
+venv/

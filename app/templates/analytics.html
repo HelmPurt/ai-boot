@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Response Analytics</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background: #f9f9f9; }
+        h2 { color: #333; }
+        .entry { background: #fff; padding: 1em; margin-bottom: 1em; border-radius: 6px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+        .flag { color: #d00; font-weight: bold; }
+        .metric { margin: 0.3em 0; }
+        .timestamp { font-size: 0.9em; color: #666; }
+    </style>
+</head>
+<body>
+    <h2>📈 Chat Analytics</h2>
+
+    {% if log %}
+        <div class="entry">
+            <div class="timestamp">
+                <strong>UTC:</strong> {{ log.timestamp }}<br>
+                <strong>Local:</strong> {{ log.local_timestamp }}
+            </div>
+
+            <p class="metric"><strong>Prompt:</strong> {{ log.prompt }}</p>
+            <p class="metric"><strong>Model:</strong> {{ log.model }}</p>
+            <p class="metric"><strong>Truncated:</strong> {{ log.was_truncated }}</p>
+
+            <p class="metric"><strong>Environment:</strong><br>
+            CPU Usage: {{ log.environment.cpu_usage }}%<br>
+            Memory: {{ log.environment.memory_info }}</p>
+
+            {% if log.flags %}
+                <p class="flag">⚠️ Flags:
+                    {% for flag in log.flags %}
+                        {{ flag }}
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            <h3>🧠 Soul Map</h3>
+            <ul>
+                {% for sample in log.soul_map_samples %}
+                    <li>
+                        <strong>Response {{ loop.index }}</strong><br>
+                        Tone: {{ sample.tone }}<br>
+                        Emotion: {{ sample.emotion_trace }}<br>
+                        Complexity: {{ sample.complexity }}
+                    </li><br>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>No analytics to display yet.</p>
+    {% endif %}
+</body>
+</html>

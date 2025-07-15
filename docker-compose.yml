@@ -1,0 +1,36 @@
+services:
+  ai-service:
+    container_name: ai-app                    # Easy-to-reference container name
+    build: .                                  # Builds from Dockerfile in current directory
+    ports:
+      - "5001:5001"                           # Expose port 5001 on host
+    volumes:
+      - ./app:/app                            # ⬅️ Mounts app with main.py and img/
+      - ./models:/app/models                  # Already great for your model access
+    environment:
+      - MODEL_PATH=/app/models/mistral.gguf   # Path used inside the container
+    env_file:
+      - .env                                  # Load environment variables from external file
+    restart: unless-stopped                   # Restart automatically unless manually stopped
+    command: >
+      uvicorn main:app --host 0.0.0.0 --port 5001 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]       # CURL with output (NOT silent)
+      #test: ["CMD", "curl", "--silent", "--output", "/dev/null", "--fail", "http://localhost:5001/health"] 
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      - mongo                                 # Ensure MongoDB starts before ai-app
+
+  mongo:
+    container_name: mongo-db                  # MongoDB container for analytics
+    image: mongo:6                            # Use latest MongoDB 6 image
+    ports:
+      - "27017:27017"                         # Expose MongoDB default port
+    restart: unless-stopped                   # Persist even if disconnected
+    volumes:
+      - mongo-data:/data/db                   # Store data locally in volume
+
+volumes:
+  mongo-data:                                 # Volume for MongoDB persistence
